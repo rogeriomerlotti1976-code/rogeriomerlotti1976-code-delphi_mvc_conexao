@@ -1,0 +1,52 @@
+unit Model.Entity.Usuario;
+
+interface
+
+uses
+  Model.Usuario.Interfaces;
+
+type
+  TModelEntityUsuario = class(TInterfacedObject, iEntityUsuario)
+  private
+    FIdUsuario: Integer;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New: iEntityUsuario;
+    function IdUsuario(AValue: Integer): iEntityUsuario; overload;
+    function IdUsuario: Integer; overload;
+  end;
+
+
+implementation
+
+{ TModelEntityUsuario }
+
+constructor TModelEntityUsuario.Create;
+begin
+
+end;
+
+destructor TModelEntityUsuario.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelEntityUsuario.IdUsuario: Integer;
+begin
+  Result := FIdUsuario;
+end;
+
+class function TModelEntityUsuario.New: iEntityUsuario;
+begin
+  Result := Self.Create;
+end;
+
+function TModelEntityUsuario.IdUsuario(AValue: Integer): iEntityUsuario;
+begin
+  Result := Self;
+  FIdUsuario := AValue;
+end;
+
+end.

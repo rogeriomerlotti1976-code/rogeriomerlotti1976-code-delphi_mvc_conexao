@@ -1,0 +1,46 @@
+unit Model.Usuario;
+
+interface
+
+uses
+  Model.Usuario.Interfaces,
+  Model.Usuario.Factory,
+  Model.Usuario.Events;
+
+type
+  TModelUsuario = class(TInterfacedObject, iUsuario)
+  private
+    FDisplay: TEventDisplay;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New: iUsuario;
+    function Display(const AValue: TEventDisplay): iUsuario;
+  end;
+
+implementation
+
+{ TModelUsuario }
+
+constructor TModelUsuario.Create;
+begin
+
+end;
+
+destructor TModelUsuario.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelUsuario.Display(const AValue: TEventDisplay): iUsuario;
+begin
+
+end;
+
+class function TModelUsuario.New: iUsuario;
+begin
+  Result := Self.Create;
+end;
+
+end.

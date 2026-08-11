@@ -1,0 +1,84 @@
+﻿unit View.Login;
+
+interface
+
+uses
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.ExtCtrls,
+  Vcl.StdCtrls,
+  Controller.Usuario.Interfaces,
+  Controller.Usuario,
+  Vcl.Buttons, Vcl.Imaging.pngimage;
+
+type
+  TFrmLogin = class(TForm)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    Panel5: TPanel;
+    Panel8: TPanel;
+    lblLogo: TLabel;
+    lblTitulo: TLabel;
+    lblUsuario: TLabel;
+    lblSenha: TLabel;
+    lblEsqueceu: TLabel;
+    lblVersao: TLabel;
+    lblBemVindo: TLabel;
+    lblDescricao: TLabel;
+    edtLogin: TEdit;
+    edtSenha: TEdit;
+    SpeedButton1: TSpeedButton;
+    Image2: TImage;
+    procedure FormCreate(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure Image2Click(Sender: TObject);
+  private
+    FControllerUsuario: iControllerUsuario;
+    procedure Autenticar;
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmLogin: TFrmLogin;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFrmLogin.Autenticar;
+begin
+  if FControllerUsuario.Autenticacao.Autenticar(edtLogin.Text, edtSenha.Text) then
+  begin
+    ShowMessage('Autenticado');
+    ModalResult := mrOk;
+  end
+  else
+    ShowMessage('Não foi possível autenticar');
+end;
+
+procedure TFrmLogin.FormCreate(Sender: TObject);
+begin
+  FControllerUsuario := TControllerUsuario.New;
+end;
+
+procedure TFrmLogin.Image2Click(Sender: TObject);
+begin
+  Autenticar;
+end;
+
+procedure TFrmLogin.SpeedButton1Click(Sender: TObject);
+begin
+  Close;
+end;
+
+end.

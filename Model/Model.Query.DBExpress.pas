@@ -1,0 +1,83 @@
+unit Model.Query.DBExpress;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  Data.DB,
+  Data.FMTBcd,
+  Datasnap.DBClient,
+  Data.SqlExpr,
+  Model.Query.Interfaces,
+  Model.Conexao.Interfaces;
+
+type
+  TModelQueryDBExpress = class(TInterfacedObject, iQuery)
+  private
+    FQuery: TSqlQuery;
+    constructor Create(AConexao: iConexao);
+    procedure SetSQL(AValue: string);
+    procedure SetParams(AValue: array of Variant);
+  public
+    destructor Destroy; override;
+    class function New(AConexao: iConexao): iQuery;
+    procedure Execute(const AStatement: string; const AParams: array of Variant); overload;
+    function Query(const AStatement: string; const AParams: array of Variant): TDataSet; overload;
+  end;
+
+implementation
+
+{ TModelQueryDBExpress }
+
+constructor TModelQueryDBExpress.Create(AConexao: iConexao);
+begin
+  FQuery := TSqlQuery.Create(nil);
+  FQuery.SQLConnection := TSQLConnection(AConexao.Conexao);
+end;
+
+destructor TModelQueryDBExpress.Destroy;
+begin
+  FreeAndNil(FQuery);
+  inherited;
+end;
+
+class function TModelQueryDBExpress.New(AConexao: iConexao): iQuery;
+begin
+  Result := Self.Create(AConexao);
+end;
+
+function TModelQueryDBExpress.Query(const AStatement: string;
+  const AParams: array of Variant): TDataSet;
+begin
+  SetSQL(AStatement);
+  SetParams(AParams);
+  FQuery.Open;
+  Result := FQuery;
+end;
+
+procedure TModelQueryDBExpress.SetParams(AValue: array of Variant);
+begin
+  for var i := Low(AValue) to High(AValue) do
+  begin
+    FQuery.Params.Add;
+    FQuery.Params[i].Value := AValue[i];
+  end;
+end;
+
+procedure TModelQueryDBExpress.SetSQL(AValue: string);
+begin
+  FQuery.Close;
+  FQuery.SQL.Clear;
+  FQuery.SQL.Add(AValue);
+end;
+
+procedure TModelQueryDBExpress.Execute(const AStatement: string;
+  const AParams: array of Variant);
+begin
+  SetSQL(AStatement);
+  SetParams(AParams);
+  FQuery.ExecSQL;
+end;
+
+end.

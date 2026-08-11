@@ -1,0 +1,25 @@
+unit Controller.Usuario.Interfaces;
+
+interface
+
+uses
+  Model.Usuario.Interfaces,
+  Model.Entity.Usuario.Interfaces;
+
+type
+  iControllerAutenticacaoUsuario = interface;
+
+  iControllerUsuario = interface
+    ['{978E4FA8-E164-4BFB-8E75-B654125273BD}']
+    function Usuario: iEntityUsuario;
+    function Autenticacao: iControllerAutenticacaoUsuario;
+  end;
+
+  iControllerAutenticacaoUsuario = interface
+    ['{44C173E1-5DC9-469A-A629-A6718A0B2576}']
+    function Autenticar(const ALogin, ASenha: string): Boolean;
+  end;
+
+implementation
+
+end.

@@ -1,0 +1,117 @@
+unit Model.Conexao.Firedac;
+
+interface
+
+uses
+  Dialogs,
+  System.SysUtils,
+  Data.DB,
+  FireDAC.Comp.Client,
+  FireDAC.Phys.SQLite,
+  Model.Conexao.Constantes,
+  Model.Conexao.Enums,
+  Model.Conexao.Interfaces,
+  Model.Conexao.Configuracao;
+
+type
+  TModelConexaoFireDac = class(TInterfacedObject, iConexao)
+  private
+    class var FInstance: iConexao;
+    FConexao: TFDConnection;
+    FConfiguracaoConexao: iConfiguracoesConexao;
+    constructor Create;
+    procedure Connect;
+    procedure SetParams;
+    procedure SetParamsSQLite;
+    procedure SetParamsFirebird;
+    procedure SetParamsMySQL;
+  public
+    class function New: iConexao;
+    destructor Destroy; override;
+    function Conexao: TCustomConnection;
+  end;
+
+implementation
+
+{ TModelConexaoFireDac }
+
+function TModelConexaoFireDac.Conexao: TCustomConnection;
+begin
+  if not FConexao.Connected then
+    Connect;
+
+  Result := FConexao;
+end;
+
+procedure TModelConexaoFireDac.Connect;
+begin
+  try
+    SetParams;
+    FConexao.Connected := True;
+  except on E: Exception do
+    raise Exception.CreateFmt(ERRO_CONEXAO_BANCO, [E.Message]);
+  end;
+end;
+
+constructor TModelConexaoFireDac.Create;
+begin
+  FConexao := TFDConnection.Create(nil);
+  FConfiguracaoConexao := TModelConexaoConfiguracao.New(Format(ARQUIVO_CONFIG,
+    [ExtractFilePath(ParamStr(0))]));
+  Connect;
+end;
+
+destructor TModelConexaoFireDac.Destroy;
+begin
+  FreeAndNil(FConexao);
+  inherited;
+end;
+
+class function TModelConexaoFireDac.New: iConexao;
+begin
+  if not Assigned(FInstance) then
+    FInstance := Self.Create;
+
+  Result := FInstance;
+end;
+
+procedure TModelConexaoFireDac.SetParams;
+begin
+  FConexao.Params.Clear;
+  FConexao.Params.DriverID := FConfiguracaoConexao.DriverName;
+
+  case FConfiguracaoConexao.TipoBanco of
+    tbSQLite:
+      SetParamsSQLite;
+
+    tbFirebird:
+      SetParamsFirebird;
+
+    tbMySQL:
+      SetParamsMySQL;
+  end;
+end;
+
+procedure TModelConexaoFireDac.SetParamsFirebird;
+begin
+  FConexao.Params.UserName := FConfiguracaoConexao.UserName;
+  FConexao.Params.Password := FConfiguracaoConexao.Password;
+end;
+
+procedure TModelConexaoFireDac.SetParamsMySQL;
+begin
+  FConexao.Params.UserName := FConfiguracaoConexao.UserName;
+  FConexao.Params.Password := FConfiguracaoConexao.Password;
+end;
+
+procedure TModelConexaoFireDac.SetParamsSQLite;
+begin
+  FConexao.Params.Add('LockingMode=Normal');
+end;
+
+initialization
+
+finalization
+  TModelConexaoFireDac.FInstance := nil;
+
+end.

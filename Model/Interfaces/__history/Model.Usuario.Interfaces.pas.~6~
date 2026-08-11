@@ -1,0 +1,22 @@
+unit Model.Usuario.Interfaces;
+
+interface
+
+uses
+  Model.Usuario.Events;
+
+type
+  iUsuario = interface
+    ['{C3BA1375-38F9-48FF-9EFC-11C7DA8E018B}']
+    function Display(const AValue: TEventDisplay): iUsuario;
+  end;
+
+
+  iFactoryUsuario = interface
+    ['{48AA1C56-1E84-4C9E-8B16-B108D3CC1193}']
+//    function EntityUsuario: iEntityUsuario;
+  end;
+
+implementation
+
+end.

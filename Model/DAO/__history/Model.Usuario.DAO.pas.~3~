@@ -1,0 +1,51 @@
+unit Model.Usuario.DAO;
+
+interface
+
+uses
+  Model.Usuario.DAO.Interfaces,
+  Model.Query.Interfaces;
+
+type
+  TModelUsuarioDAO = class(TInterfacedObject, iModelDAOUsuario)
+  private
+    FQuery: iQuery;
+    constructor Create;
+  public
+    class function New: iModelDAOUsuario;
+    destructor Destroy; override;
+    function BuscarPorLogin(const ALogin: string): iModelDAOUsuario;
+  end;
+
+implementation
+
+{ TModelUsuarioDAO }
+
+function TModelUsuarioDAO.BuscarPorLogin(
+  const ALogin: string): iModelDAOUsuario;
+const
+  SQL_SELECT =
+    ' SELECT ID_USUARIO, LOGIN, SENHA, ATIVO, DATA_CADASTRO ' + sLineBreak +
+    '   FROM USUARIO ' + sLineBreak +
+    '  WHERE LOGIN = %s';
+begin
+
+end;
+
+constructor TModelUsuarioDAO.Create;
+begin
+  FQuery :=
+end;
+
+destructor TModelUsuarioDAO.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelUsuarioDAO.New: iModelDAOUsuario;
+begin
+  Result := Self.Create;
+end;
+
+end.

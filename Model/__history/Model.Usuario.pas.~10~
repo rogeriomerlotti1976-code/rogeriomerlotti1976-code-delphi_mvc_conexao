@@ -1,0 +1,93 @@
+unit Model.Usuario;
+
+interface
+
+uses
+  System.SysUtils,
+  Model.Usuario.Interfaces,
+  Model.Usuario.Factory,
+  Model.Entity.Usuario.Interfaces,
+  Model.Usuario.Events,
+  Model.Usuario.DAO.Interfaces;
+
+type
+  TModelUsuario = class(TInterfacedObject, iUsuario)
+  private
+    FDisplay: TEventDisplay;
+    FUsuario: iEntityUsuario;
+    FUsuarioLogado: iEntityUsuario;
+    FUsuarioDAO: iModelDAOUsuario;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New: iUsuario;
+    function Usuario(AValue: iEntityUsuario): iUsuario;
+    function Display(const AValue: TEventDisplay): iUsuario;
+    function Autenticar: Boolean;
+    function UsuarioLogado: iEntityUsuario;
+  end;
+
+implementation
+
+{ TModelUsuario }
+
+function TModelUsuario.Autenticar: Boolean;
+var
+  LUsuario: iEntityUsuario;
+begin
+  Result := False;
+  FUsuarioLogado := nil;
+
+  if (FUsuario.Login = EmptyStr) or (FUsuario.Senha = EmptyStr) then
+    raise Exception.Create('Informe login e senha.');
+
+  LUsuario := FUsuarioDAO.BuscarPorLogin(FUsuario.Login);
+
+  { Mensagem genérica de propósito: não revelar se o login existe ou não. }
+  if not Assigned(LUsuario) then
+    raise Exception.Create('Login ou senha inválidos.');
+
+//  if LUsuario.Senha <> HashSenha(FSenha) then
+//    raise Exception.Create('Login ou senha inválidos.');
+
+  if not LUsuario.Ativo then
+    raise Exception.Create('Usuário inativo. Procure o administrador do sistema.');
+
+  FUsuarioLogado := LUsuario;
+  Result := True;
+end;
+
+constructor TModelUsuario.Create;
+begin
+
+end;
+
+destructor TModelUsuario.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelUsuario.Display(const AValue: TEventDisplay): iUsuario;
+begin
+  Result := Self;
+  FDisplay := AValue;
+end;
+
+class function TModelUsuario.New: iUsuario;
+begin
+  Result := Self.Create;
+end;
+
+function TModelUsuario.Usuario(AValue: iEntityUsuario): iUsuario;
+begin
+  Result := Self;
+  FUsuario := AValue;
+end;
+
+function TModelUsuario.UsuarioLogado: iEntityUsuario;
+begin
+
+end;
+
+end.

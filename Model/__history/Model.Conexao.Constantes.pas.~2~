@@ -1,0 +1,10 @@
+unit Model.Conexao.Constantes;
+
+interface
+
+const
+  ERRO_CONEXAO_BANCO = 'Erro ao conectar com o banco de dados: %s';
+
+implementation
+
+end.

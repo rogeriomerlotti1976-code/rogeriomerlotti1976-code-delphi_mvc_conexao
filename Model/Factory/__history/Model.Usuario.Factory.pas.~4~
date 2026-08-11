@@ -1,0 +1,32 @@
+unit Model.Usuario.Factory;
+
+interface
+
+uses
+  Model.Usuario.Interfaces,
+  Model.Entity.Usuario;
+
+type
+  TModelUsuarioFactory = class(TInterfacedObject, iFactoryUsuario)
+    private
+    public
+      constructor Create;
+      destructor Destroy; override;
+  end;
+
+implementation
+
+{ TModelUsuarioFactory }
+
+constructor TModelUsuarioFactory.Create;
+begin
+
+end;
+
+destructor TModelUsuarioFactory.Destroy;
+begin
+
+  inherited;
+end;
+
+end.

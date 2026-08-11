@@ -1,0 +1,109 @@
+unit Model.Entity.Usuario;
+
+interface
+
+uses
+  Model.Entity.Usuario.Interfaces;
+
+type
+  TModelEntityUsuario = class(TInterfacedObject, iEntityUsuario)
+  private
+    FIdUsuario: Integer;
+    FLogin: string;
+    FSenha: string;
+    FAtivo: Boolean;
+    FDataCadastro: TDateTime;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New: iEntityUsuario;
+    function IdUsuario(const AValue: Integer): iEntityUsuario; overload;
+    function IdUsuario: Integer; overload;
+    function Login(const AValue: string): iEntityUsuario; overload;
+    function Login: string; overload;
+    function Senha(const AValue: string): iEntityUsuario; overload;
+    function Senha: string; overload;
+    function Ativo(const AValue: Boolean): iEntityUsuario; overload;
+    function Ativo: Boolean; overload;
+    function DataCadastro(const AValue: TDateTime): iEntityUsuario; overload;
+    function DataCadastro: TDateTime; overload;
+  end;
+
+
+implementation
+
+{ TModelEntityUsuario }
+
+function TModelEntityUsuario.Ativo(const AValue: Boolean): iEntityUsuario;
+begin
+  Result := Self;
+  FAtivo := AValue;
+end;
+
+function TModelEntityUsuario.Ativo: Boolean;
+begin
+  Result := FAtivo;
+end;
+
+constructor TModelEntityUsuario.Create;
+begin
+
+end;
+
+function TModelEntityUsuario.DataCadastro: TDateTime;
+begin
+  Result := FDataCadastro;
+end;
+
+function TModelEntityUsuario.DataCadastro(
+  const AValue: TDateTime): iEntityUsuario;
+begin
+  Result := Self;
+  FDataCadastro := AValue;
+end;
+
+destructor TModelEntityUsuario.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelEntityUsuario.IdUsuario: Integer;
+begin
+  Result := FIdUsuario;
+end;
+
+function TModelEntityUsuario.Login: string;
+begin
+  Result := FLogin;
+end;
+
+function TModelEntityUsuario.Login(const AValue: string): iEntityUsuario;
+begin
+  Result := Self;
+  FLogin := AValue;
+end;
+
+class function TModelEntityUsuario.New: iEntityUsuario;
+begin
+  Result := Self.Create;
+end;
+
+function TModelEntityUsuario.Senha(const AValue: string): iEntityUsuario;
+begin
+  Result := Self;
+  FSenha := AValue;
+end;
+
+function TModelEntityUsuario.Senha: string;
+begin
+  Result := FSenha;
+end;
+
+function TModelEntityUsuario.IdUsuario(const AValue: Integer): iEntityUsuario;
+begin
+  Result := Self;
+  FIdUsuario := AValue;
+end;
+
+end.

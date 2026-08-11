@@ -1,0 +1,70 @@
+unit Model.Usuario.DAO;
+
+interface
+
+uses
+  Data.DB,
+  Model.Usuario.DAO.Interfaces,
+  Model.Entity.Usuario.Interfaces,
+  Model.Entity.Usuario,
+  Model.Query.Interfaces,
+  Model.Query.Factory,
+  Model.Conexao.Factory;
+
+type
+  TModelUsuarioDAO = class(TInterfacedObject, iModelDAOUsuario)
+  private
+    FQuery: iQuery;
+    constructor Create;
+  public
+    class function New: iModelDAOUsuario;
+    destructor Destroy; override;
+    function BuscarPorLogin(const ALogin, ASenha: string): iEntityUsuario;
+  end;
+
+implementation
+
+{ TModelUsuarioDAO }
+
+function TModelUsuarioDAO.BuscarPorLogin(const ALogin, ASenha: string): iEntityUsuario;
+const
+  SQL_SELECT =
+    ' SELECT ID_USUARIO, LOGIN, SENHA, ATIVO, DATA_HORA_CADASTRO ' + sLineBreak +
+    '   FROM USUARIO ' + sLineBreak +
+    '  WHERE LOGIN = :LOGIN ' + sLineBreak +
+    '    AND SENHA = :SENHA';
+var
+  LDataSet: TDataSet;
+begin
+  Result := nil;
+  LDataSet := FQuery.Query(SQL_SELECT, [ALogin, ASenha]);
+
+  if LDataSet.IsEmpty then
+    Exit;
+
+  Result :=
+    TModelEntityUsuario.New
+      .IdUsuario(LDataSet.FieldByName('ID_USUARIO').AsInteger)
+      .Login(LDataSet.FieldByName('LOGIN').AsString)
+      .Senha(LDataSet.FieldByName('SENHA').AsString)
+      .Ativo(LDataSet.FieldByName('ATIVO').AsBoolean)
+      .DataCadastro(LDataSet.FieldByName('DATA_HORA_CADASTRO').AsDateTime);
+end;
+
+constructor TModelUsuarioDAO.Create;
+begin
+  FQuery := TModelQueryFactory.New(TModelConexaoFactory.New.ConexaoFiredac).QueryFiredac;
+end;
+
+destructor TModelUsuarioDAO.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelUsuarioDAO.New: iModelDAOUsuario;
+begin
+  Result := Self.Create;
+end;
+
+end.

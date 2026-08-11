@@ -1,0 +1,19 @@
+unit Controller.Usuario.Interfaces;
+
+interface
+
+uses
+  Model.Usuario.Interfaces,
+  Model.Entity.Usuario.Interfaces;
+
+type
+  iControllerUsuario = interface
+    ['{978E4FA8-E164-4BFB-8E75-B654125273BD}']
+    function Usuario: iEntityUsuario;
+    function Autenticar: Boolean;
+    function UsuarioLogado: iEntityUsuario;
+  end;
+
+implementation
+
+end.

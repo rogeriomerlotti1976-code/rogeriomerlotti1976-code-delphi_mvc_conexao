@@ -1,0 +1,97 @@
+unit Model.Usuario;
+
+interface
+
+uses
+  System.SysUtils,
+  Model.Usuario.Interfaces,
+  Model.Usuario.Factory,
+  Model.Entity.Usuario.Interfaces,
+  Model.Entity.Usuario,
+  Model.Usuario.Events,
+  Model.Usuario.DAO.Interfaces,
+  Model.Usuario.DAO;
+
+type
+  TModelUsuario = class(TInterfacedObject, iUsuario)
+  private
+    FDisplay: TEventDisplay;
+    FLogin: string;
+    FSenha: string;
+    FUsuarioLogado: iEntityUsuario;
+    FUsuarioDAO: iModelDAOUsuario;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New: iUsuario;
+    function Usuario: iEntityUsuario;
+    function Display(const AValue: TEventDisplay): iUsuario;
+    function Autenticar: Boolean;
+    function UsuarioLogado: iEntityUsuario;
+  end;
+
+implementation
+
+{ TModelUsuario }
+
+function TModelUsuario.Autenticar: Boolean;
+var
+  LUsuario: iEntityUsuario;
+begin
+  Result := False;
+  FUsuarioLogado := nil;
+
+  if (FLogin = EmptyStr) or (FSenha = EmptyStr) then
+    raise Exception.Create('Informe login e senha.');
+
+  LUsuario := FUsuarioDAO.BuscarPorLogin(FLogin);
+
+  { Mensagem genérica de propósito: não revelar se o login existe ou não. }
+  if not Assigned(LUsuario) then
+    raise Exception.Create('Login ou senha inválidos.');
+
+//  if LUsuario.Senha <> HashSenha(FSenha) then
+//    raise Exception.Create('Login ou senha inválidos.');
+
+  if not LUsuario.Ativo then
+    raise Exception.Create('Usuário inativo. Procure o administrador do sistema.');
+
+  FUsuarioLogado := LUsuario;
+  Result := True;
+end;
+
+constructor TModelUsuario.Create;
+begin
+  FUsuarioDAO := TModelUsuarioDAO.New;
+end;
+
+destructor TModelUsuario.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelUsuario.Display(const AValue: TEventDisplay): iUsuario;
+begin
+  Result := Self;
+  FDisplay := AValue;
+end;
+
+class function TModelUsuario.New: iUsuario;
+begin
+  Result := Self.Create;
+end;
+
+function TModelUsuario.Usuario: iEntityUsuario;
+begin
+  Result := TModelEntityUsuario(Self);
+  FLogin := Result.Login;
+  FSenha := Result.Senha;
+end;
+
+function TModelUsuario.UsuarioLogado: iEntityUsuario;
+begin
+
+end;
+
+end.

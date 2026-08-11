@@ -1,0 +1,122 @@
+unit Model.Conexao.DBExpress;
+
+interface
+
+uses
+  System.SysUtils,
+  Data.DB,
+  Data.SqlExpr,
+  Model.Conexao.Constantes,
+  Enum.Conexao,
+  Model.Conexao.Interfaces,
+  Model.Conexao.Configuracao;
+
+type
+  TModelConexaoDBExpress = class(TInterfacedObject, iConexao)
+  private
+    class var FInstance: iConexao;
+    FConexao: TSQLConnection;
+    FConfiguracaoConexao: iConfiguracoesConexao;
+    constructor Create;
+    procedure Connect;
+    procedure SetParams;
+    procedure SetParamsSQLite;
+    procedure SetParamsMySQL;
+    procedure SetParamsFirebird;
+  public
+    class function New: iConexao;
+    destructor Destroy; override;
+    function Conexao: TCustomConnection;
+  end;
+
+implementation
+
+{ TModelConexaoDBExpress }
+
+function TModelConexaoDBExpress.Conexao: TCustomConnection;
+begin
+  if not FConexao.Connected then
+    Connect;
+
+  Result := FConexao;
+end;
+
+procedure TModelConexaoDBExpress.Connect;
+begin
+  try
+    SetParams;
+    FConexao.Connected := True;
+  except on E: Exception do
+    raise Exception.CreateFmt(ERRO_CONEXAO_BANCO, [E.Message]);
+  end;
+end;
+
+constructor TModelConexaoDBExpress.Create;
+begin
+  FConexao := TSQLConnection.Create(nil);
+  FConfiguracaoConexao := TModelConexaoConfiguracao.New(Format(ARQUIVO_CONFIG,
+    [ExtractFilePath(ParamStr(0))]));
+  Connect;
+end;
+
+destructor TModelConexaoDBExpress.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelConexaoDBExpress.New: iConexao;
+begin
+  if not Assigned(FInstance) then
+    FInstance := Self.Create;
+
+  Result := FInstance;
+end;
+
+procedure TModelConexaoDBExpress.SetParams;
+begin
+  FConexao.Params.Clear;
+  FConexao.DriverName := FConfiguracaoConexao.DriverName;
+
+  case FConfiguracaoConexao.TipoBanco of
+    tbSQLite:
+      SetParamsSQLite;
+
+    tbFirebird:
+      SetParamsFirebird;
+
+    tbMySQL:
+      SetParamsMySQL;
+  end;
+end;
+
+procedure TModelConexaoDBExpress.SetParamsFirebird;
+begin
+  FConexao.Params.Values['HostName'] := FConfiguracaoConexao.Server;
+  FConexao.Params.Values['Port'] := FConfiguracaoConexao.Port;
+  FConexao.Params.Values['Database'] := FConfiguracaoConexao.Path;
+  FConexao.Params.Values['User_Name'] := FConfiguracaoConexao.UserName;
+  FConexao.Params.Values['Password'] := FConfiguracaoConexao.Password;
+end;
+
+procedure TModelConexaoDBExpress.SetParamsMySQL;
+begin
+  FConexao.Params.Values['HostName'] := FConfiguracaoConexao.Server;
+  FConexao.Params.Values['Port'] := FConfiguracaoConexao.Port;
+  FConexao.Params.Values['Database'] := FConfiguracaoConexao.Database;
+  FConexao.Params.Values['User_Name'] := FConfiguracaoConexao.UserName;
+  FConexao.Params.Values['Password'] := FConfiguracaoConexao.Password;
+end;
+
+procedure TModelConexaoDBExpress.SetParamsSQLite;
+begin
+  FConexao.Params.Values['Database'] := FConfiguracaoConexao.Path;
+  FConexao.Params.Values['LockingMode'] := 'Normal';
+end;
+
+initialization
+
+finalization
+  TModelConexaoDBExpress.FInstance := nil;
+
+end.

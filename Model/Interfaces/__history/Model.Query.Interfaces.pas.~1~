@@ -1,0 +1,7 @@
+unit Model.Query.Interfaces;
+
+interface
+
+implementation
+
+end.

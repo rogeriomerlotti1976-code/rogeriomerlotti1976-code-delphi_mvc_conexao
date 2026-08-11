@@ -1,0 +1,7 @@
+unit Model.Usuario.DAO.Interfaces;
+
+interface
+
+implementation
+
+end.

@@ -1,0 +1,51 @@
+unit Model.Conexao.Factory;
+
+interface
+
+uses
+  Model.Conexao.Interfaces,
+  Model.Conexao.DBExpress,
+  Model.Conexao.Firedac;
+
+type
+  TModelConexaoFactory = class(TInterfacedObject, iConexaoFactory)
+  private
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iConexaoFactory;
+    function ConexaoFiredac: iConexao;
+    function ConexaoDBExpress: iConexao;
+  end;
+
+implementation
+
+{ TModelConexaoFactory }
+
+function TModelConexaoFactory.ConexaoDBExpress: iConexao;
+begin
+  Result := TModelConexaoDBExpress.New;
+end;
+
+function TModelConexaoFactory.ConexaoFiredac: iConexao;
+begin
+  Result := TModelConexaoFireDac.New;
+end;
+
+constructor TModelConexaoFactory.Create;
+begin
+
+end;
+
+destructor TModelConexaoFactory.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelConexaoFactory.New: iConexaoFactory;
+begin
+  Result := Self.Create;
+end;
+
+end.

@@ -1,0 +1,81 @@
+unit View.Principal;
+
+interface
+
+uses
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.StdCtrls,
+  Controller.Usuario.Interfaces,
+  Controller.Usuario,
+  Controller.Conexao.Interfaces,
+  Controller.Conexao,
+  Enum.Conexao,
+
+
+
+  FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.VCLUI.Wait,
+  Data.DB, FireDAC.Comp.Client, Data.SqlExpr, FireDAC.Phys.FB,
+  FireDAC.Phys.FBDef, Data.DbxSqlite, Data.DBXMySQL, FireDAC.Phys.SQLite,
+  FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
+  FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.Stan.Param, FireDAC.DatS,
+  FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet;
+
+type
+  TFrmPrincipal = class(TForm)
+    Button1: TButton;
+    Button2: TButton;
+    FDConnection1: TFDConnection;
+    FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+  private
+    FControllerUsuario: iControllerUsuario;
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmPrincipal: TFrmPrincipal;
+
+implementation
+
+{$R *.dfm}
+
+procedure TFrmPrincipal.Button1Click(Sender: TObject);
+var
+  LControllerConexao: iControllerConexao;
+begin
+//  FControllerUsuario
+//    .Usuario
+//      .IdUsuario(1)
+  LControllerConexao := TControllerConexao.New;
+  LControllerConexao.Conexao(tcDBExpress);
+end;
+
+procedure TFrmPrincipal.Button2Click(Sender: TObject);
+begin
+
+
+  if FControllerUsuario.Autenticacao.Autenticar('ROGERIO', '123456') then
+    ShowMessage('Autenticado')
+  else
+    ShowMessage('Não foi possível autenticar');
+end;
+
+procedure TFrmPrincipal.FormCreate(Sender: TObject);
+begin
+  FControllerUsuario := TControllerUsuario.New;
+end;
+
+end.

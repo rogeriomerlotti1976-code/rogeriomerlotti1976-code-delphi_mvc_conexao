@@ -1,0 +1,37 @@
+unit Model.Usuario.DAO;
+
+interface
+
+uses
+  Model.Usuario.DAO.Interfaces;
+
+type
+  TModelUsuarioDAO = class(TInterfacedObject, iModelDAOUsuario)
+  private
+    constructor Create;
+  public
+    class function New: iModelDAOUsuario;
+    destructor Destroy; override;
+  end;
+
+implementation
+
+{ TModelUsuarioDAO }
+
+constructor TModelUsuarioDAO.Create;
+begin
+
+end;
+
+destructor TModelUsuarioDAO.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelUsuarioDAO.New: iModelDAOUsuario;
+begin
+  Result := Self.Create;
+end;
+
+end.

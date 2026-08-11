@@ -1,0 +1,35 @@
+unit Model.Usuario.Interfaces;
+
+interface
+
+uses
+  Model.Entity.Usuario.Interfaces,
+  Model.Usuario.Events;
+
+type
+  iUsuario = interface
+    ['{C3BA1375-38F9-48FF-9EFC-11C7DA8E018B}']
+    function Display(const AValue: TEventDisplay): iUsuario;
+    function Usuario: iEntityUsuario;
+  end;
+
+  iModelUsuario = interface
+    ['{4962E1EA-28B6-437E-81E1-EA0FE0502013}']
+    function Inserir: iModelUsuario;
+    function Atualizar: iModelUsuario;
+    function Excluir: iModelUsuario;
+  end;
+
+  iModelAutenticacaoUsuario = interface
+    ['{CA4C307C-C0A7-4A68-B303-158917C7DBE8}']
+    function Autenticar(AValue: iEntityUsuario): Boolean;
+  end;
+
+  iFactoryUsuario = interface
+    ['{48AA1C56-1E84-4C9E-8B16-B108D3CC1193}']
+    function EntityUsuario: iEntityUsuario;
+  end;
+
+implementation
+
+end.

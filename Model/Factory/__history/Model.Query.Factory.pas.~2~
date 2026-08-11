@@ -1,0 +1,38 @@
+unit Model.Query.Factory;
+
+interface
+
+uses
+  Model.Query.Interfaces,
+  Model.Query.Firedac,
+  Model.Query.DBExpress;
+
+type
+  TModelQueryFactory = class(TInterfacedObject, iQueryFactory)
+  private
+    constructor Create;
+  public
+    class function New: iQueryFactory;
+    destructor Destroy;
+  end;
+
+implementation
+
+{ TModelQueryFactory }
+
+constructor TModelQueryFactory.Create;
+begin
+
+end;
+
+destructor TModelQueryFactory.Destroy;
+begin
+
+end;
+
+class function TModelQueryFactory.New: iQueryFactory;
+begin
+  Result := Self.Create;
+end;
+
+end.

@@ -1,0 +1,14 @@
+unit Model.Entity.Usuario.Interfaces;
+
+interface
+
+type
+  iEntityUsuario = interface
+    ['{41051BF4-C325-4689-920C-4678D5A1CD82}']
+    function IdUsuario(const AValue: Integer): iEntityUsuario; overload;
+    function IdUsuario: Integer; overload;
+  end;
+
+implementation
+
+end.

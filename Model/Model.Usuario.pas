@@ -1,0 +1,59 @@
+unit Model.Usuario;
+
+interface
+
+uses
+  System.SysUtils,
+  Model.Usuario.Interfaces,
+  Model.Usuario.Factory,
+  Model.Entity.Usuario.Interfaces,
+  Model.Entity.Usuario,
+  Model.Usuario.Events,
+  Model.Usuario.DAO.Interfaces,
+  Model.Usuario.DAO;
+
+type
+  TModelUsuario = class(TInterfacedObject, iUsuario)
+  private
+    FDisplay: TEventDisplay;
+    FUsuarioDAO: iModelDAOUsuario;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New: iUsuario;
+    function Usuario: iEntityUsuario;
+    function Display(const AValue: TEventDisplay): iUsuario;
+  end;
+
+implementation
+
+{ TModelUsuario }
+
+constructor TModelUsuario.Create;
+begin
+  FUsuarioDAO := TModelUsuarioDAO.New;
+end;
+
+destructor TModelUsuario.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelUsuario.Display(const AValue: TEventDisplay): iUsuario;
+begin
+  Result := Self;
+  FDisplay := AValue;
+end;
+
+class function TModelUsuario.New: iUsuario;
+begin
+  Result := Self.Create;
+end;
+
+function TModelUsuario.Usuario: iEntityUsuario;
+begin
+//
+end;
+
+end.

@@ -1,0 +1,20 @@
+unit Model.Conexao.Interfaces;
+
+interface
+
+type
+  iConexao = interface
+    ['{40C35855-7AF6-4BD1-8EE3-B074CF819153}']
+    function Conexao: iConexao;
+  end;
+
+  iConexaoFactory = interface
+    ['{DB4FBE23-0CFE-4DA6-913B-66203CC9B5B0}']
+    function ConexaoFiredac: iConexao;
+    function ConexaoDBExpress: iConexao;
+  end;
+
+
+implementation
+
+end.
